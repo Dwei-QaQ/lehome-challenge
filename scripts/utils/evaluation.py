@@ -282,12 +282,12 @@ def run_evaluation_loop(
                 logger.warning(f"[VLM] Subprocess stderr: {result.stderr}")
 
             garment_policy_map = {
-                "top_long": "/mnt/lehome-challenge/outputs/train/ckpt/act_top_long/checkpoints/030000/pretrained_model",
-                "pant_long": "/mnt/lehome-challenge/outputs/train/ckpt/act_pant_long/checkpoints/030000/pretrained_model",
-                "top_short": "/mnt/lehome-challenge/outputs/train/ckpt/act_top_short/checkpoints/015000/pretrained_model",
-                "pant_short": "/mnt/lehome-challenge/outputs/train/ckpt/act_pant_short/checkpoints/035000/pretrained_model",
+                "top_long":  "dweiQAQ/lehome-act-top_long",
+                "top_short": "dweiQAQ/lehome-act-top_short",
+                "pant_long": "dweiQAQ/lehome-act-pant_long",
+                "pant_short": "dweiQAQ/lehome-act-pant_short",
             }
-            default_policy_path = "/mnt/lehome-challenge/outputs/train/act_four_types_0331/checkpoints/060000/pretrained_model"
+            default_policy_path = "dweiQAQ/lehome-act-top_long"
 
             output_lines = result.stdout.strip().split('\n')
             garment_type = output_lines[-1] if output_lines else "custom"
@@ -295,19 +295,12 @@ def run_evaluation_loop(
 
             if garment_type in garment_policy_map:
                 args.policy_type = "lerobot"
-                candidate_path = garment_policy_map[garment_type]
-                config_path = os.path.join(candidate_path, "config.json")
-                if os.path.exists(config_path):
-                    args.policy_path = candidate_path
-                    logger.info(f"[VLM] 识别衣物类别: {garment_type}，使用本地策略路径: {args.policy_path}")
-                else:
-                    args.policy_path = candidate_path
-                    logger.warning(f"[VLM] 识别衣物类别: {garment_type}，但未找到 config.json，直接用目录路径: {args.policy_path}")
+                args.policy_path = garment_policy_map[garment_type]
+                logger.info(f"[VLM] 识别衣物类别: {garment_type}，使用策略: {args.policy_path}")
             else:
                 args.policy_type = "lerobot"
-                default_candidate = default_policy_path
-                args.policy_path = default_candidate
-                logger.warning(f"[VLM] 衣物识别失败或类别未知({garment_type})，使用默认策略路径: {args.policy_path}")
+                args.policy_path = default_policy_path
+                logger.warning(f"[VLM] 衣物识别失败或类别未知({garment_type})，使用默认策略: {args.policy_path}")
 
             # Reload policy with the newly determined path
             if policy_kwargs is not None:
@@ -322,7 +315,7 @@ def run_evaluation_loop(
         except subprocess.TimeoutExpired:
             logger.warning("[VLM] VLM 子进程超时（30秒），使用默认策略")
             args.policy_type = "lerobot"
-            args.policy_path = "/mnt/lehome-challenge/outputs/train/act_four_types_0331/checkpoints/060000/pretrained_model"
+            args.policy_path = "dweiQAQ/lehome-act-top_long"
             logger.warning(f"[VLM] 超时，使用默认策略路径: {args.policy_path}")
             if policy_kwargs is not None:
                 try:
@@ -336,7 +329,7 @@ def run_evaluation_loop(
         except Exception as e:
             logger.warning(f"[VLM] 衣物识别失败，使用默认策略，错误信息: {e}")
             args.policy_type = "lerobot"
-            args.policy_path = "/mnt/lehome-challenge/outputs/train/act_four_types_0331/checkpoints/060000/pretrained_model"
+            args.policy_path = "dweiQAQ/lehome-act-top_long"
             if policy_kwargs is not None:
                 try:
                     new_policy_kwargs = dict(policy_kwargs)
