@@ -287,7 +287,7 @@ def run_evaluation_loop(
                 "pant_long": "dweiQAQ/lehome-act-pant_long",
                 "pant_short": "dweiQAQ/lehome-act-pant_short",
             }
-            default_policy_path = "dweiQAQ/lehome-act-top_long"
+            default_policy_path = "dweiQAQ/act_four_types_cloth"
 
             output_lines = result.stdout.strip().split('\n')
             garment_type = output_lines[-1] if output_lines else "custom"
@@ -315,7 +315,7 @@ def run_evaluation_loop(
         except subprocess.TimeoutExpired:
             logger.warning("[VLM] VLM 子进程超时（30秒），使用默认策略")
             args.policy_type = "lerobot"
-            args.policy_path = "dweiQAQ/lehome-act-top_long"
+            args.policy_path = "dweiQAQ/act_four_types_cloth"
             logger.warning(f"[VLM] 超时，使用默认策略路径: {args.policy_path}")
             if policy_kwargs is not None:
                 try:
@@ -329,7 +329,7 @@ def run_evaluation_loop(
         except Exception as e:
             logger.warning(f"[VLM] 衣物识别失败，使用默认策略，错误信息: {e}")
             args.policy_type = "lerobot"
-            args.policy_path = "dweiQAQ/lehome-act-top_long"
+            args.policy_path = "dweiQAQ/act_four_types_cloth"
             if policy_kwargs is not None:
                 try:
                     new_policy_kwargs = dict(policy_kwargs)
