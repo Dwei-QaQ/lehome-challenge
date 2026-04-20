@@ -153,6 +153,11 @@ def setup_record_parser(
         choices=["deg", "rad"],
         help="Joint angle unit for kinematic solver (default: rad)",
     )
+    parser.add_argument(
+    "--mirror_real",
+    action="store_true",
+    help="When used with --teleop_device, mirror real robot joints into the simulation instead of policy output.",
+    )
 
     return parser
 
@@ -439,7 +444,13 @@ def setup_eval_parser() -> argparse.ArgumentParser:
         "--eval_dataset_path",
         type=str,
         default="Datasets/eval",
-        help="Path to save evaluation datasets.",
+        help="Path to save evaluation datasets (no human intervention, policy success only).",
+    )
+    parser.add_argument(
+        "--record_dataset_path",
+        type=str,
+        default="Datasets/record",
+        help="Path to save datasets with human intervention (success only).",
     )
 
     # Policy arguments for Imitation Learning (IL)
@@ -457,7 +468,7 @@ def setup_eval_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--policy_path",
         type=str,
-        default="outputs/train/diffusion_fold_1/checkpoints/100000/pretrained_model",
+        default="outputs/train/act_four_types_0331/checkpoints/060000/pretrained_model",
         help="Path to the pretrained IL policy checkpoint.",
     )
     parser.add_argument(
@@ -475,6 +486,15 @@ def setup_eval_parser() -> argparse.ArgumentParser:
         type=str,
         default="Assets/robots/so101_new_calib.urdf",
         help="URDF path for IK solver (required when --use_ee_pose is set).",
+    )
+    parser.add_argument(
+        "--sync_to_real",
+        action="store_true",
+        help=(
+            "If set, mirror simulation joint states to the real robot at every step. "
+            "Requires --teleop_device to be set. Torque is enabled on the real arm for the "
+            "duration of the evaluation and disabled when done."
+        ),
     )
 
     # Docker policy arguments
