@@ -282,7 +282,7 @@ def run_evaluation_loop(
                 logger.warning(f"[VLM] Subprocess stderr: {result.stderr}")
 
             garment_policy_map = {
-                "top_long":  "dweiQAQ/lehome-act-top_long",
+                "top_long":  "dweiQAQ/act_four_types_cloth",
                 "top_short": "dweiQAQ/lehome-act-top_short",
                 "pant_long": "dweiQAQ/lehome-act-pant_long",
                 "pant_short": "dweiQAQ/lehome-act-pant_short",
